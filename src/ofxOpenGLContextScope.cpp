@@ -35,6 +35,35 @@ struct ofxOpenGLContextScopeImpl
 CGLContextObj ofxOpenGLContextScopeImpl::ctx = NULL;
 CGLPixelFormatObj ofxOpenGLContextScopeImpl::pixStuff = NULL;
 
+#elif defined TARGET_WIN32 
+
+struct ofxOpenGLContextScopeImpl
+{
+	ofxOpenGLContextScopeImpl()
+	{
+		glfwMakeContextCurrent(g_SubWindow);
+	}
+
+	~ofxOpenGLContextScopeImpl()
+	{
+		glfwMakeContextCurrent(nullptr);
+	}
+
+	static void setup()
+	{
+		GLFWwindow *window= glfwGetCurrentContext();
+		g_SubWindow = glfwCreateWindow(1, 1, "Thread", nullptr, window);
+		if (g_SubWindow){
+			glfwHideWindow(g_SubWindow);
+		}else{
+			glfwTerminate();
+		}
+	}
+	static GLFWwindow *g_SubWindow;
+};
+
+GLFWwindow * ofxOpenGLContextScopeImpl::g_SubWindow = NULL;
+
 #else
 #error not implemented
 #endif
