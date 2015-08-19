@@ -81,7 +81,7 @@ ofxOpenGLContextScope::~ofxOpenGLContextScope()
 	impl = NULL;
 }
 
-void ofxOpenGLContextScope::setup()
+void ofxOpenGLContextScope::setup(bool useSharedContext)
 {
-	ofxOpenGLContextScopeImpl::setup();
+	ofxOpenGLContextScopeImpl::setup(useSharedContext);
 }
