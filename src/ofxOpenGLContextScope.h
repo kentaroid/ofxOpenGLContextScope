@@ -9,7 +9,8 @@ class ofxOpenGLContextScope
 public:
 
 	static void setup();
-	
+	static void setup(bool useSharedContext = true);
+
 	ofxOpenGLContextScope();
 	~ofxOpenGLContextScope();
 	

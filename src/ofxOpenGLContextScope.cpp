@@ -21,11 +21,13 @@ struct ofxOpenGLContextScopeImpl
 		CGLDestroyContext(newCtx);
 	}
 	
-	static void setup()
+	static void setup(bool useSharedContext)
 	{
-		ctx = CGLGetCurrentContext();
+		//TODO: check useSharedContext
+		ctx = useSharedContext?CGLGetCurrentContext():NULL;
 		pixStuff = CGLGetPixelFormat(ctx);
 	}
+
 
 	CGLContextObj newCtx;
 	static CGLContextObj ctx;
@@ -37,7 +39,7 @@ CGLPixelFormatObj ofxOpenGLContextScopeImpl::pixStuff = NULL;
 
 #elif defined TARGET_WIN32 
 
-struct ofxOpenGLContextScopeImpl
+struct ofxOpenGLContextScopeImpl 
 {
 	ofxOpenGLContextScopeImpl()
 	{
@@ -49,16 +51,17 @@ struct ofxOpenGLContextScopeImpl
 		glfwMakeContextCurrent(nullptr);
 	}
 
-	static void setup()
-	{
-		GLFWwindow *window= glfwGetCurrentContext();
-		g_SubWindow = glfwCreateWindow(1, 1, "Thread", nullptr, window);
-		if (g_SubWindow){
+	static void setup(bool useSharedContext) {
+	
+		GLFWwindow *window = glfwGetCurrentContext();
+		g_SubWindow = glfwCreateWindow(1, 1, "Thread", nullptr, useSharedContext ? window : nullptr);
+		if (g_SubWindow) {
 			glfwHideWindow(g_SubWindow);
-		}else{
+		}else {
 			glfwTerminate();
 		}
 	}
+
 	static GLFWwindow *g_SubWindow;
 };
 
